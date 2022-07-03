@@ -1,3 +1,4 @@
+import aiohttp
 import pytest
 import requests
 from fbchat import (
@@ -230,8 +231,14 @@ def test_handle_http_error_no_error():
     assert handle_http_error(302) is None
 
 
-def test_handle_requests_error():
-    with pytest.raises(HTTPError, match="Connection error"):
-        handle_requests_error(requests.ConnectionError())
-    with pytest.raises(HTTPError, match="Requests error"):
-        handle_requests_error(requests.RequestException())
+@pytest.mark.parametrize(
+    "match,exceptions",
+    [
+        ("Connection error", [aiohttp.ClientConnectionError(), aiohttp.ServerConnectionError()]),
+        ("Requests error", [requests.ConnectionError(), requests.RequestException()]),
+    ]
+)
+def test_handle_requests_error(match, exceptions):
+    for exception in exceptions:
+        with pytest.raises(HTTPError, match=match):
+            handle_requests_error(exception)
