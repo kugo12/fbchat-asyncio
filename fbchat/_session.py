@@ -16,7 +16,7 @@ from http.cookies import SimpleCookie, BaseCookie
 # Or maybe just replace usage with `html.parser`?
 import bs4
 
-from ._common import log, req_log, kw_only
+from ._common import log, req_log
 from . import _graphql, _util, _exception
 
 from typing import Optional, Mapping, Callable, Any, Awaitable, Dict, List, NamedTuple
@@ -63,6 +63,14 @@ def parse_server_js_define(html: str) -> Mapping[str, Any]:
     _, *define_splits = define_splits
 
     if not define_splits:
+        soup = bs4.BeautifulSoup(a, "html.parser")
+        for it in soup.find_all('script', attrs={"type": "application/json"}):
+            if "dtsg" in it.text.lower():
+                js = json.loads(it.text)
+                result = _util.search_for_dtsg(js)
+                if result is not None:
+                    return result
+
         file_name = write_html_to_temp(html)
         raise _exception.ParseError("Could not find any ServerJSDefine", data_file=file_name)
     # if len(define_splits) > 2:
@@ -302,7 +310,7 @@ def prefix_url(domain: str, path: str) -> URL:
     return URL(path)
 
 
-@attr.s(slots=True, kw_only=kw_only, repr=False, eq=False, auto_attribs=True)
+@attr.s(slots=True, kw_only=True, repr=False, eq=False, auto_attribs=True)
 class Session:
     """Stores and manages state required for most Facebook requests.
 

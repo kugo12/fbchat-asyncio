@@ -1,4 +1,3 @@
-import attr
 from . import Image, Attachment
 from .._common import attrs_default
 

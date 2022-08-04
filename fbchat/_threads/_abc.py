@@ -4,8 +4,7 @@ import collections
 import datetime
 from .._common import log, attrs_default
 from .. import _util, _exception, _session, _graphql, _models
-from typing import MutableMapping, Mapping, Any, Iterable, Tuple, Optional, AsyncGenerator
-
+from typing import MutableMapping, Mapping, Any, Iterable, Tuple, Optional, AsyncGenerator, AsyncIterator
 
 DEFAULT_COLOR = "#0084ff"
 SETABLE_COLORS = (
@@ -319,7 +318,7 @@ class ThreadABC(metaclass=abc.ABCMeta):
 
     async def search_messages(
         self, query: str, limit: int
-    ) -> Iterable[_models.MessageSnippet]:
+    ) -> AsyncIterator[_models.MessageSnippet]:
         """Find and get message IDs by query.
 
         Warning! If someone send a message to the thread that matches the query, while
@@ -444,7 +443,7 @@ class ThreadABC(metaclass=abc.ABCMeta):
         # result["page_info"]["has_next_page"] is not correct when limit > 12
         return (result["page_info"]["end_cursor"], rtn)
 
-    async def fetch_images(self, limit: Optional[int]) -> Iterable["_models.Attachment"]:
+    async def fetch_images(self, limit: Optional[int]) -> AsyncIterator["_models.Attachment"]:
         """Fetch images/videos posted in the thread.
 
         The returned images are ordered by last sent first.

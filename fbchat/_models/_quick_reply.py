@@ -1,5 +1,3 @@
-import attr
-from . import Attachment
 from .._common import attrs_default
 
 from typing import Any, Optional

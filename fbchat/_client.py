@@ -1,15 +1,15 @@
-from typing import Callable, Optional
+from typing import Callable
 import datetime
 
 import attr
 
-from ._common import log, req_log, kw_only
+from ._common import log, req_log
 from . import _exception, _util, _graphql, _session, _threads, _models
 
 from typing import Sequence, Iterable, Tuple, Optional, Set, BinaryIO, AsyncIterator
 
 
-@attr.s(slots=True, kw_only=kw_only, auto_attribs=True)
+@attr.s(slots=True, kw_only=True, auto_attribs=True)
 class Client:
     """A client for Facebook Messenger.
 

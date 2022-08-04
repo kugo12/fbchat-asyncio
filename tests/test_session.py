@@ -1,5 +1,7 @@
 import datetime
 import pytest
+from yarl import URL
+
 from fbchat import ParseError, _util
 from fbchat._session import (
     parse_server_js_define,
@@ -13,46 +15,30 @@ from fbchat._session import (
 )
 
 
-def test_parse_server_js_define_old():
-    html = """
-    some data;require("TimeSliceImpl").guard(function(){(require("ServerJSDefine")).handleDefines([["DTSGInitialData",[],{"token":"123"},100]])
-
-    <script>require("TimeSliceImpl").guard(function() {require("ServerJSDefine").handleDefines([["DTSGInitData",[],{"token":"123","async_get_token":"12345"},3333]])
-
-    </script>
-    other irrelevant data
-    """
-    define = parse_server_js_define(html)
-    assert define == {
-        "DTSGInitialData": {"token": "123"},
-        "DTSGInitData": {"async_get_token": "12345", "token": "123"},
-    }
-
-
 def test_parse_server_js_define_new():
+    # some data;require("TimeSliceImpl").guard(function(){new (require("ServerJS"))().handle({"define":[["DTSGInitialData",[],{"token":""},100]],"require":[...]});}, "ServerJS define", {"root":true})();
     html = """
-    some data;require("TimeSliceImpl").guard(function(){new (require("ServerJS"))().handle({"define":[["DTSGInitialData",[],{"token":""},100]],"require":[...]});}, "ServerJS define", {"root":true})();
     more data
-    <script><script>require("TimeSliceImpl").guard(function(){var s=new (require("ServerJS"))();s.handle({"define":[["DTSGInitData",[],{"token":"","async_get_token":""},3333]],"require":[...]});require("Run").onAfterLoad(function(){s.cleanup(require("TimeSliceImpl"))});}, "ServerJS define", {"root":true})();</script>
+    <script><script>requireLazy(["JSScheduler","ServerJS","ScheduledApplyEach"],function(JSScheduler,ServerJS,ScheduledApplyEach){qpl_inl("123","tierOneBeforeScheduler");JSScheduler.runWithPriority(3,function(){qpl_inl("123","tierOneInsideScheduler");(new ServerJS()).handleWithCustomApplyEach(ScheduledApplyEach,{"define":[["DTSGInitialData",[],{"token":"asd"},258],["asd", [], {"dd": "aa"}, 123]]})})})</script>
     other irrelevant data
     """
     define = parse_server_js_define(html)
     assert define == {
-        "DTSGInitialData": {"token": ""},
-        "DTSGInitData": {"async_get_token": "", "token": ""},
+        "DTSGInitialData": {"token": "asd"},
+        "asd": {"dd": "aa"},
     }
 
 
 def test_parse_server_js_define_error():
-    with pytest.raises(ParseError, match="Could not find any"):
+    with pytest.raises(ParseError, match="Could not find any .*"):
         parse_server_js_define("")
 
     html = 'function(){(require("ServerJSDefine")).handleDefines([{"a": function(){}}])'
-    with pytest.raises(ParseError, match="Invalid"):
+    with pytest.raises(ParseError, match="Could not find any .*"):
         parse_server_js_define(html + html)
 
     html = 'function(){require("ServerJSDefine").handleDefines({"a": "b"})'
-    with pytest.raises(ParseError, match="Invalid"):
+    with pytest.raises(ParseError, match="Could not find any .*"):
         parse_server_js_define(html + html)
 
 
@@ -65,10 +51,10 @@ def test_base36encode(number, expected):
 
 
 def test_prefix_url():
-    static_url = "https://upload.messenger.com/"
-    assert prefix_url(static_url) == static_url
-    assert prefix_url("/") == "https://www.messenger.com/"
-    assert prefix_url("/abc") == "https://www.messenger.com/abc"
+    domain = "example.com"
+    assert prefix_url(domain, "abc") == URL("abc")
+    assert prefix_url(domain, "/") == URL("https://www.example.com/")
+    assert prefix_url(domain, "/abc") == URL("https://www.example.com/abc")
 
 
 def test_generate_message_id():
@@ -76,9 +62,10 @@ def test_generate_message_id():
     assert generate_message_id(_util.now(), "def")
 
 
-def test_session_factory():
-    session = session_factory()
-    assert session.headers
+@pytest.mark.asyncio
+async def test_session_factory(domain: str):
+    async with session_factory(domain) as session:
+        assert session.headers
 
 
 def test_client_id_factory():

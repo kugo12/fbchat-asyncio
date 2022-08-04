@@ -1,5 +1,3 @@
-import attr
-import datetime
 from ._common import attrs_event, Event, UnknownEvent, ThreadEvent
 from ._client_payload import *
 from ._delta_class import *
