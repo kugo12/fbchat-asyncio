@@ -169,12 +169,12 @@ def now() -> datetime.datetime:
 _dtsg_keys = ["DTSGInitData", "DTSGInitialData", "MRequestConfig"]
 
 
-def search_for_dtsg(obj: Any) -> Optional[dict[str, Any]]:
+def search_for_dtsg(obj: Any) -> Optional[Mapping[str, Any]]:
     if isinstance(obj, (list, tuple)):
-        if len(obj) >= 3 and obj[0] in _dtsg_keys:
-            return {obj[0]: obj[2]}
-
         for it in obj:
+            if isinstance(it, (tuple, list)) and len(it) >= 3 and it[0] in _dtsg_keys:
+                return get_jsmods_define(obj)
+
             s = search_for_dtsg(it)
             if s is not None:
                 return s
