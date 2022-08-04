@@ -2,13 +2,20 @@
 requires = ["flit_core >=3.2,<4"]
 build-backend = "flit_core.buildapi"
 
-[project]
+[tool.flit.module]
 name = "fbchat"
+
+[project]
+name = "fbchat-asyncio-kvgx12"
 authors = [
     {name = "kvgx12", email = "szczepan7700@gmail.com"}
 ]
 readme = "README.rst"
-dynamic = ["version", "description"]
+license = {file="LICENSE"}
+dynamic = ["description", "version"]
+
+requires-python = ">=3.9"
+
 dependencies = [
     "attrs>=19.1",
     "beautifulsoup4~=4.0",
@@ -16,7 +23,7 @@ dependencies = [
     "yarl",
     "paho-mqtt~=1.5",
 ]
-requires-python = ">=3.9"
+
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: BSD License",
@@ -31,7 +38,6 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-license = {file="LICENSE"}
 
 [project.optional-dependencies]
 proxy = [
@@ -48,3 +54,7 @@ lint = [
     "black",
     "pyright"
 ]
+
+[project.urls]
+"Homepage" = "https://github.com/kugo12/fbchat-asyncio"
+"Bug Tracker" = "https://github.com/kugo12/fbchat-asyncio/issues"
