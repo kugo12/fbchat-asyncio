@@ -1,4 +1,3 @@
-import attr
 import datetime
 from . import Image, Attachment
 from .._common import attrs_default

@@ -1,4 +1,3 @@
-import attr
 import datetime
 import enum
 from .._common import attrs_default

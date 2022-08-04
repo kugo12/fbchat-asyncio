@@ -4,7 +4,7 @@ import paho.mqtt.client
 import urllib.request
 import asyncio
 import aiohttp
-from ._common import log, kw_only
+from ._common import log
 from . import _util, _exception, _session, _events
 
 from typing import AsyncGenerator, Optional, List
@@ -98,7 +98,7 @@ def mqtt_factory(domain: str) -> paho.mqtt.client.Client:
     return mqtt
 
 
-@attr.s(slots=True, kw_only=kw_only, eq=False, auto_attribs=True)
+@attr.s(slots=True, kw_only=True, eq=False, auto_attribs=True)
 class Listener:
     """Listen to incoming Facebook events.
 

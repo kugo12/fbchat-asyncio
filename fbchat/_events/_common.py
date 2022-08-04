@@ -1,11 +1,10 @@
 import attr
-from .._common import kw_only
 from .. import _exception, _util, _threads
 
 from typing import Any
 
 #: Default attrs settings for events
-attrs_event = attr.s(slots=True, kw_only=kw_only, auto_attribs=True)
+attrs_event = attr.s(slots=True, kw_only=True, auto_attribs=True)
 
 
 @attrs_event

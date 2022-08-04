@@ -1,10 +1,8 @@
 import datetime
 import json
-import time
 import random
 import urllib.parse
 
-from ._common import log
 from . import _exception
 
 from typing import Iterable, Optional, Any, Mapping, Sequence
@@ -43,7 +41,7 @@ def json_minimal(data: Any) -> str:
 def strip_json_cruft(text: str) -> str:
     """Removes `for(;;);` (and other cruft) that preceeds JSON responses."""
     try:
-        return text[text.index("{") :]
+        return text[text.index("{"):]
     except ValueError as e:
         raise _exception.ParseError("No JSON object found", data=text) from e
 

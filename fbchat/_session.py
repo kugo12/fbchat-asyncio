@@ -16,7 +16,7 @@ from http.cookies import SimpleCookie, BaseCookie
 # Or maybe just replace usage with `html.parser`?
 import bs4
 
-from ._common import log, req_log, kw_only
+from ._common import log, req_log
 from . import _graphql, _util, _exception
 
 from typing import Optional, Mapping, Callable, Any, Awaitable, Dict, List, NamedTuple
@@ -302,7 +302,7 @@ def prefix_url(domain: str, path: str) -> URL:
     return URL(path)
 
 
-@attr.s(slots=True, kw_only=kw_only, repr=False, eq=False, auto_attribs=True)
+@attr.s(slots=True, kw_only=True, repr=False, eq=False, auto_attribs=True)
 class Session:
     """Stores and manages state required for most Facebook requests.
 
