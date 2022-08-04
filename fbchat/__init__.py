@@ -120,7 +120,7 @@ from ._listen import Listener
 
 from ._client import Client
 
-__version__ = "0.6.21"
+__version__ = "0.6.22"
 
 from . import _fix_module_metadata
 
