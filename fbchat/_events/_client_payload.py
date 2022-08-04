@@ -1,4 +1,3 @@
-import attr
 import datetime
 from ._common import attrs_event, UnknownEvent, ThreadEvent
 from .. import _exception, _util, _threads, _models

@@ -1,4 +1,3 @@
-import attr
 import datetime
 from ._common import attrs_event, Event, UnknownEvent, ThreadEvent
 from . import _delta_type

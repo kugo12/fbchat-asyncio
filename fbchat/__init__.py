@@ -4,15 +4,14 @@ Copyright:
     (c) 2015 - 2018 by Taehoon Kim
     (c) 2018 - 2020 by Mads Marquart
     (c) 2020 by Tulir Asokan
+    (c) 2022 by Szczepan Wiśniowski
+
 
 License:
     BSD 3-Clause, see LICENSE for more details.
 """
 
 import logging as _logging
-
-# Set default logging handler to avoid "No handler found" warnings.
-_logging.getLogger(__name__).addHandler(_logging.NullHandler())
 
 # The order of these is somewhat significant, e.g. User has to be imported after Thread!
 from . import _common, _util
@@ -121,10 +120,12 @@ from ._listen import Listener
 
 from ._client import Client
 
-__version__ = "0.6.21"
-
+__version__ = "0.6.22"
 
 from . import _fix_module_metadata
 
 _fix_module_metadata.fixup_module_metadata(globals())
 del _fix_module_metadata
+
+# Set default logging handler to avoid "No handler found" warnings.
+_logging.getLogger(__name__).addHandler(_logging.NullHandler())

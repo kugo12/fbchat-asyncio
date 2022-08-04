@@ -42,4 +42,5 @@ def fixup_module_metadata(namespace):
 # This is done so that Sphinx autodoc can detect the file's source
 # TODO: Find a better way to detect when we're running Sphinx!
 if os.environ.get("_FBCHAT_DISABLE_FIX_MODULE_METADATA") == "1":
-    fixup_module_metadata = lambda namespace: None
+    def fixup_module_metadata(namespace):
+        return None
